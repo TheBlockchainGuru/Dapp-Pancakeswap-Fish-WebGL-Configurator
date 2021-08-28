@@ -1,0 +1,11 @@
+[
+    {
+      "title": "3D configurator",
+      "modelPath": "../public/model/scene.gltf",
+      "diffuseTexturePath": [
+        "../public/model/textures/initialShadingGroup_baseColor.jpeg",
+        "../public/model/textures/initialShadingGroup_metallicRoughness.png"
+      ],
+      "normalTexturePath": "../public/model/textures/initialShadingGroup_normal.png"
+    }
+  ]
