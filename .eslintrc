@@ -33,8 +33,10 @@
     "react/require-default-props": 0,
     "no-nested-ternary": 0,
     "max-classes-per-file": 0,
-    "@typescript-eslint/no-namespace": "off"
+    "@typescript-eslint/no-namespace": "off",
 
+    "camelcase": "off",
+    "@typescript-eslint/camelcase": ["warn"]
     // End temporary rules
   }
 }

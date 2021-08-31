@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLoader, MeshProps, useFrame } from '@react-three/fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { MeshProps, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface ModelProps extends MeshProps {
   data: {
-    modelPath: string;
     setModel: (model: any) => void;
-    curColor: string;
     setColor: (col: any) => void;
-    curName: string;
     setCurName: (name: any) => void;
     curSpeed: any;
+    nodes: any;
+    colors: any;
+    animations: any;
   };
 }
 
@@ -25,29 +24,18 @@ interface actions {
 
 const Model: (props: ModelProps) => JSX.Element | null = (props) => {
   const {
-    data: { modelPath, setModel, curColor, setColor, curName, setCurName, curSpeed },
+    data: { setModel, setColor, setCurName, curSpeed, nodes, colors, animations },
   } = props;
 
   const group = useRef()
-  
-  const model = useLoader(GLTFLoader, modelPath);
-  const { nodes, animations } = model;
 
   const actions: actions = useRef();
 
   const [mixer] = useState(() => new THREE.AnimationMixer(group));
-  const [colors, setColors] = useState( localStorage.getItem('con_colors') ? localStorage.getItem('con_colors') : {});
 
   useEffect(() => {
-    setModel({ 'scene': group.current, 'animations': animations });
-
-    const temp = {};
-    Object.keys(nodes).forEach(name => {
-      if( nodes[name].isSkinnedMesh )
-        temp[name] = colors[name] ? colors[name] : '#ffffff'
-    });
-    setColors(temp);
-  }, [model, setModel, colors, nodes, animations]);
+    setModel({ 'scene': group.current });
+  }, [ setModel ]);
 
   useEffect(() => {
     if( animations.length ) {
@@ -61,12 +49,6 @@ const Model: (props: ModelProps) => JSX.Element | null = (props) => {
 
   }, [animations, mixer]);
 
-  useEffect(() => {
-    const temp = {...colors};
-    temp[curName] = curColor;
-    setColors(temp);
-  }, [curColor, colors, curName]);
-
   useFrame((_, delta) => mixer.update(delta * curSpeed));
 
   return (
@@ -76,15 +58,15 @@ const Model: (props: ModelProps) => JSX.Element | null = (props) => {
         <group position={[0.01, 0.37, 0.02]}>
           <primitive object={nodes.Armature_rootJoint} />
             {
-              Object.keys(nodes).map((name, index) => {
+              Object.keys(nodes).map((name) => {
                 return nodes[name].isSkinnedMesh ? (
                   <skinnedMesh
                     key={nodes[name].uuid}
                     geometry={nodes[name].geometry}
                     material={nodes[name].material}
                     skeleton={nodes[name].skeleton}
-                    material-color={colors[name]}
-                    onClick={(e) => { setCurName(name); setColor( colors[name] ); e.stopPropagation() }}
+                    material-color={colors[name] ? colors[name] : '#ffffff'}
+                    onClick={(e) => { setCurName(name); e.stopPropagation() }}
                   />
                 ) : null;
               })

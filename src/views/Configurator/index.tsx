@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Heading } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import Page from 'components/Layout/Page'
 import ColorOption from './components/ColorOption';
 import Viewer from './components/Viewer';
 import BackSelector from './components/BackSelector';
@@ -28,10 +27,16 @@ const Configurator = () => {
   const [curName, setCurName] = useState(localStorage.getItem('con_curName') ? localStorage.getItem('con_curName') : 'None selected.');
   const [curSpeed, setCurSpeed] = useState(localStorage.getItem('con_curSpeed') ? localStorage.getItem('con_curSpeed') : 1);
   const [curBack, setCurBack] = useState(localStorage.getItem('con_curBack') ? localStorage.getItem('con_curBack') : 0);
+  const [colors, setColors] = useState( JSON.parse( localStorage.getItem('con_colors') ) ? JSON.parse( localStorage.getItem('con_colors') ) : {});
 
   const setCurrentColor = (col) => {
     setCurColor(col);
     localStorage.setItem('con_curColor', col);
+
+    const temp = {...colors};
+    temp[curName] = col;
+    setColors(temp);
+    localStorage.setItem('con_colors', JSON.stringify(colors));
   }
 
   const setCurrentSpeed = (speed) => {
@@ -41,6 +46,8 @@ const Configurator = () => {
 
   const setCurrentName = (name) => {
     setCurName(name);
+    setCurColor(colors[name]);
+
     localStorage.setItem('con_curName', name);
   }
 
@@ -67,8 +74,9 @@ const Configurator = () => {
             setColor={(col) => setCurrentColor(col)}
             curName={curName}
             setCurName={(name) => setCurrentName(name)}
-            curSpeed= {curSpeed}
-            curBack = {curBack}
+            curSpeed={curSpeed}
+            curBack={curBack}
+            colors={colors}
             />
           <ColorOption
             setColor={(col) => setCurrentColor(col)}

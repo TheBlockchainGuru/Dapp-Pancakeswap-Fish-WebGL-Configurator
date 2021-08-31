@@ -1,8 +1,9 @@
-import React, { Suspense, useState, useRef } from 'react';
+import React, { Suspense, useState } from 'react';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { Button, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { Canvas, useLoader } from '@react-three/fiber'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import * as THREE from 'three'
 import styled from 'styled-components'
 import Controls from './THREE/Controls';
@@ -38,10 +39,11 @@ type ChildProps = {
     curName: string,
     setCurName: (arg0: string) => void
     curSpeed: any,
-    curBack: any
+    curBack: any,
+    colors: any,
 }
 
-const Viewer : React.FC<ChildProps> = ({curColor, setColor, curName, setCurName, curSpeed, curBack}) => {
+const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed, curBack, colors}) => {
     const { t } = useTranslation()  
 
     const [ sceneData, setSceneData ] = useState(localStorage.getItem('con_sceneData') ? localStorage.getItem('con_sceneData') : {});
@@ -49,8 +51,10 @@ const Viewer : React.FC<ChildProps> = ({curColor, setColor, curName, setCurName,
 
     const exporter = new GLTFExporter();
 
+    const model = useLoader(GLTFLoader, models[1].modelPath);
+    const { nodes, animations } = model;
+
     const exportModel = () => {
-        
         const link = document.createElement( 'a' );
         link.style.display = 'none';
         document.body.appendChild( link ); // Firefox workaround, see #6594
@@ -66,14 +70,15 @@ const Viewer : React.FC<ChildProps> = ({curColor, setColor, curName, setCurName,
             save( new Blob( [ text ], { type: 'text/plain' } ), filename );
         }
 
-        exporter.parse( sceneData, function ( gltf ) {
+        exporter.parse( sceneData, ( gltf ) => {
             const output = JSON.stringify( gltf, null, 2 );
             saveString( output, 'scene.gltf' );
         }, {trs: true, forceIndices: true, includeCustomExtensions: true, 'animations': animationData} );
     }
 
     const setModel = (data) => {
-        const { scene, animations } = data;
+        const { scene } = data;
+        
         setSceneData(scene);
         setAnimationData(animations);
         
@@ -121,13 +126,13 @@ const Viewer : React.FC<ChildProps> = ({curColor, setColor, curName, setCurName,
                         <Dome />
                         <Model
                             data={{ 
-                                'modelPath': models[4].modelPath,
                                 'setModel': setModel,
-                                'curColor': curColor,
                                 'setColor': setColor,
-                                'curName': curName,
                                 'setCurName': setCurName,
-                                'curSpeed': curSpeed
+                                'curSpeed': curSpeed,
+                                'animations': animations,
+                                'nodes': nodes,
+                                'colors': colors
                             }}
                             position={modelProps.position}
                             castShadow
