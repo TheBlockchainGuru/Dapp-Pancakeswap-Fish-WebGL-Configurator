@@ -1,8 +1,9 @@
-import React, { Suspense, useEffect, useState, RefObject, useRef } from 'react';
+import React, { Suspense, useState, useRef } from 'react';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
-import { Button } from '@pancakeswap/uikit'
+import { Button, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useLoader } from '@react-three/fiber'
+import * as THREE from 'three'
 import styled from 'styled-components'
 import Controls from './THREE/Controls';
 import Model from './THREE/Model';
@@ -12,15 +13,15 @@ import {
     ambientLightProps,
     cameraProps,
     controlsProps,
-    groundProps,
     modelProps,
     pointLightProps,
     models,
-    exportPath,
+    BackPaths
   } from '../utils/constant';
 
 const StyledViewer = styled.div`
-    width: 80%;
+    width: 60%;
+    border-left: 1px solid #CECFCA;
     border-right: 1px solid #CECFCA;
     padding: 10px;
     text-align: center;
@@ -31,17 +32,25 @@ const StyledCanvasWrapper = styled.div`
     margin-top: 10px;
 `
 
-const Viewer = () => {
+type ChildProps = {
+    curColor: string,
+    setColor: (arg0: string) => void,
+    curName: string,
+    setCurName: (arg0: string) => void
+    curSpeed: any,
+    curBack: any
+}
+
+const Viewer : React.FC<ChildProps> = ({curColor, setColor, curName, setCurName, curSpeed, curBack}) => {
     const { t } = useTranslation()  
 
-    const [sceneData, setSceneData] = useState({});
-    const [ animationData, setAnimationData ] = useState({});
-
-    const superheroElement: RefObject<typeof Model> = React.createRef<typeof Model>();
+    const [ sceneData, setSceneData ] = useState(localStorage.getItem('con_sceneData') ? localStorage.getItem('con_sceneData') : {});
+    const [ animationData, setAnimationData ] = useState(localStorage.getItem('con_animationData') ? localStorage.getItem('con_animationData') : {});
 
     const exporter = new GLTFExporter();
 
     const exportModel = () => {
+        
         const link = document.createElement( 'a' );
         link.style.display = 'none';
         document.body.appendChild( link ); // Firefox workaround, see #6594
@@ -60,13 +69,26 @@ const Viewer = () => {
         exporter.parse( sceneData, function ( gltf ) {
             const output = JSON.stringify( gltf, null, 2 );
             saveString( output, 'scene.gltf' );
-        }, {trs: true, forceIndices: true, includeCustomExtensions: true, animations: animationData} );
+        }, {trs: true, forceIndices: true, includeCustomExtensions: true, 'animations': animationData} );
     }
 
     const setModel = (data) => {
-        const { scene, animations, materials } = data;
+        const { scene, animations } = data;
         setSceneData(scene);
         setAnimationData(animations);
+        
+        localStorage.setItem('con_sceneData', scene);
+        localStorage.setItem('con_animationData', animations);
+    }
+
+    const Dome = () => {
+        const texture = useLoader(THREE.TextureLoader, BackPaths[curBack])
+        return (
+            <mesh>
+            <sphereBufferGeometry attach="geometry" args={[50, 100, 100]} />
+            <meshBasicMaterial attach="material" map={texture} side={THREE.BackSide} />
+            </mesh>
+        )
     }
 
     return (
@@ -74,6 +96,7 @@ const Viewer = () => {
             <Button variant="primary" onClick={() => { exportModel(); }}>
                   {t('Export Model')}
             </Button>
+            <Text fontSize="25px">{ t( curName ) }</Text>
             <StyledCanvasWrapper>
                 <Canvas
                     camera={{ fov: cameraProps.fov, position: cameraProps.position }}
@@ -89,18 +112,25 @@ const Viewer = () => {
                     <Controls
                         maxPolarAngle={controlsProps.maxPolarAngle}
                         minPolarAngle={controlsProps.minPolarAngle}
+                        maxDistance={controlsProps.maxDistance}
+                        minDistance={controlsProps.minDistance}
                         target={controlsProps.target}
                         enableKeys
                     />
                     <Suspense fallback={<Loader />}>
+                        <Dome />
                         <Model
-                        ref={superheroElement}
-                        data={{ 
-                            'modelPath': models[1].modelPath,
-                            'setModel': setModel,
-                        }}
-                        position={modelProps.position}
-                        castShadow
+                            data={{ 
+                                'modelPath': models[4].modelPath,
+                                'setModel': setModel,
+                                'curColor': curColor,
+                                'setColor': setColor,
+                                'curName': curName,
+                                'setCurName': setCurName,
+                                'curSpeed': curSpeed
+                            }}
+                            position={modelProps.position}
+                            castShadow
                         />
                     </Suspense>
                 </Canvas>

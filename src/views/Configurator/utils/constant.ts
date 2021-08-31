@@ -3,13 +3,11 @@ export const cameraProps = { fov: 20, position: [30, 0, 0] };
 export const pixelRatio = 1;
 export const pointLightProps = { decay: 2, position: [10, 20, 15], shadowMapSize: 4096 };
 
-export const controlsProps = { maxPolarAngle: Math.PI / 2.05, minPolarAngle: 0, target: [0, 0, 0] };
+export const controlsProps = { maxPolarAngle: 2 *Math.PI, minPolarAngle: 0, target: [0, 0, 0], maxDistance: 150, minDistance: 10 };
 
 export const modelProps = { position: [0, 1, 8] };
 
 export const groundProps = { posiiton: [0, 0, 0], rotation: [-Math.PI / 2, 0, 0] };
-
-export const exportPath = './exportModels/';
 
 export const models = [
     {
@@ -45,4 +43,10 @@ export const models = [
     {
         modelPath: "./model/shiny_fish/scene.gltf",
     },
+];
+
+export const BackPaths = [
+    "./skybox/ocean1.jpg",
+    "./skybox/ocean2.jpg",
+    "./skybox/ocean3.jpg"
 ];
