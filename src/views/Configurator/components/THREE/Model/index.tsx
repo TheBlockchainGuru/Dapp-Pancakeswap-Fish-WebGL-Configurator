@@ -24,7 +24,7 @@ interface actions {
 
 const Model: (props: ModelProps) => JSX.Element | null = (props) => {
   const {
-    data: { setModel, setColor, setCurName, curSpeed, nodes, colors, animations },
+    data: { setModel, setCurName, curSpeed, nodes, colors, animations },
   } = props;
 
   const group = useRef()

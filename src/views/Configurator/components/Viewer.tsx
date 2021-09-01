@@ -28,9 +28,16 @@ const StyledViewer = styled.div`
     text-align: center;
 `
 const StyledCanvasWrapper = styled.div`
-    height: 650px;
+    height: 550px;
     background-color: #CECFCA;
     margin-top: 10px;
+`
+
+const StyledElementWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
 `
 
 type ChildProps = {
@@ -46,12 +53,40 @@ type ChildProps = {
 const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed, curBack, colors}) => {
     const { t } = useTranslation()  
 
+    const StyledElement1 = styled.div`
+        width: 150px;
+        background-image: url(${models[4].elementPath[0]});
+        background-size: cover;
+        height: 100px;
+        border: ${curName === 'Circle_0' ? 5 : 0}px solid #f1416c;
+        margin-top: 10px;
+
+        &:hover {
+            cursor: pointer;
+            border: 5px solid #b84969;
+        }
+    `
+    const StyledElement2 = styled.div`
+        width: 150px;
+        background-image: url(${models[4].elementPath[1]});
+        background-size: cover;
+        height: 100px;
+        border: ${curName === 'Sphere_0' ? 5 : 0}px solid #f1416c;
+        margin-top: 10px;
+        margin-left: 20px;
+
+        &:hover {
+            cursor: pointer;
+            border: 5px solid #b84969;
+        }
+    `
+
     const [ sceneData, setSceneData ] = useState(localStorage.getItem('con_sceneData') ? localStorage.getItem('con_sceneData') : {});
     const [ animationData, setAnimationData ] = useState(localStorage.getItem('con_animationData') ? localStorage.getItem('con_animationData') : {});
 
     const exporter = new GLTFExporter();
 
-    const model = useLoader(GLTFLoader, models[1].modelPath);
+    const model = useLoader(GLTFLoader, models[4].modelPath);
     const { nodes, animations } = model;
 
     const exportModel = () => {
@@ -140,6 +175,15 @@ const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed,
                     </Suspense>
                 </Canvas>
             </StyledCanvasWrapper>
+
+            <StyledElementWrapper>
+                <StyledElement1 onClick={() => {setCurName('Circle_0')}}>
+                    {/* first */}
+                </StyledElement1>
+                <StyledElement2 onClick={() => {setCurName('Sphere_0')}}>
+                    {/* second */}
+                </StyledElement2>
+            </StyledElementWrapper>
         </StyledViewer>
     )
 }
