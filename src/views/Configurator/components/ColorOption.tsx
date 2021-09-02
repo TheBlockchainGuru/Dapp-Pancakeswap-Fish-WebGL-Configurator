@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ChromePicker } from 'react-color';
+import { HexColorPicker } from "react-colorful";
 import { Slider, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 
@@ -11,24 +11,23 @@ type ChildProps = {
     curSpeed: any,
 }
 
+const StyledOption = styled.div`
+    width: 20%;
+    padding: 10px;
+    text-align: center;
+`
+
+const StyledTestArea = styled.div`
+    width: 100%;
+    height: 200px;
+    margin-bottom: 20px;
+`
+
 const Option: React.FC<ChildProps> = ({setColor, curColor, setSpeed, curSpeed}) => {
-    const { t } = useTranslation()  
-
-    const StyledOption = styled.div`
-        width: 20%;
-        padding: 10px;
-        text-align: center;
-    `
-
-    const StyledTestArea = styled.div`
-        background-color: ${curColor};
-        width: 100%;
-        height: 200px;
-        margin-bottom: 20px;
-    `
+    const { t } = useTranslation();
 
     const handleChangeComplete = (color) => {
-        setColor(color.hex);
+        setColor(color);
     };
 
     return (
@@ -36,10 +35,10 @@ const Option: React.FC<ChildProps> = ({setColor, curColor, setSpeed, curSpeed}) 
             <Text mb="10px" fontSize="20px">
                 { t('Select Color') }
             </Text>
-            <StyledTestArea>
+            <StyledTestArea style={{backgroundColor: curColor}}>
                 {/* <h1>'</h1> */}
             </StyledTestArea>
-            <ChromePicker 
+            <HexColorPicker 
                 color={ curColor }
                 onChange={ handleChangeComplete }
                 />

@@ -8,15 +8,13 @@
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-    "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx}'",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:write": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
     "updateLPsAPR": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/updateLPsAPR.ts"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn format:check",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "browserslist": {
@@ -70,6 +68,7 @@
     "qs": "^6.9.4",
     "react": "^17.0.1",
     "react-color": "^2.19.3",
+    "react-colorful": "^5.4.0",
     "react-countup": "^4.3.3",
     "react-datepicker": "^4.1.0",
     "react-dom": "^17.0.1",

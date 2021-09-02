@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState } from 'react';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { Button, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
