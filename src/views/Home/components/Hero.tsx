@@ -1,10 +1,14 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import { Flex, Heading, Link, Button } from '@pancakeswap/uikit'
+import {
+  Flex, Heading, Link, useModal,
+  Button
+} from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import useTheme from 'hooks/useTheme'
+import View3DNftModal from 'views/Configurator/components/View3DNftModal'
 import { SlideSvgDark, SlideSvgLight } from './SlideSvg'
 import CompositeImage, { getSrcSet, CompositeImageProps } from './CompositeImage'
 
@@ -85,11 +89,15 @@ const starsImage: CompositeImageProps = {
     { src: 'star-top-r', alt: '3D Star' },
   ],
 }
+const handleSuccess = () => {
+  console.log('')
+}
 
 const Hero = () => {
   const { t } = useTranslation()
   const { account } = useWeb3React()
   const { theme } = useTheme()
+  const [onPresentView3DNftModal] = useModal(<View3DNftModal onDismiss={handleSuccess} />)
 
   return (
     <>
@@ -114,6 +122,7 @@ const Hero = () => {
             <Link mr="16px" href="/swap">
               <Button variant={!account ? 'secondary' : 'primary'}>{t('Trade Now')}</Button>
             </Link>
+            <Button variant={!account ? 'secondary' : 'primary'} onClick={onPresentView3DNftModal}>{t('View Clown')}</Button>
           </Flex>
         </Flex>
         <Flex
