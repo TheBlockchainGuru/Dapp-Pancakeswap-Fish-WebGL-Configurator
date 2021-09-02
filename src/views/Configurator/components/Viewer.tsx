@@ -70,7 +70,6 @@ const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed,
 
     const [ sceneData, setSceneData ] = useState(localStorage.getItem('con_sceneData') ? localStorage.getItem('con_sceneData') : {});
     const [ animationData, setAnimationData ] = useState(localStorage.getItem('con_animationData') ? localStorage.getItem('con_animationData') : {});
-    const [nodeMaterials, setNodematerials] = useState({});
 
     const exporter = new GLTFExporter();
 
