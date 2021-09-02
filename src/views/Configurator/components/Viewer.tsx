@@ -117,6 +117,8 @@ const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed,
             </mesh>
         )
     }
+    
+    const imageURL = (name) => `url(${models[4].elementPath[name]})`
 
     return (
         <StyledViewer>
@@ -164,47 +166,18 @@ const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed,
             </StyledCanvasWrapper>
 
             <StyledElementWrapper>
-                {
-                    Object.keys(nodes).map((name) => {
+            {
+                Object.keys(nodes).map((name) => {
                     return nodes[name].isSkinnedMesh || nodes[name].isMesh ? (
-                        <StyledElement onClick={() => {setCurName(name)}} key={nodes[name].uuid}>
-                            <Canvas
-                                camera={{ fov: 20, position: [30, 0, 0] }}
-                            >
-                                <ambientLight intensity={ambientLightProps.intensity} />
-                                <pointLight
-                                    position={pointLightProps.position}
-                                    castShadow
-                                    decay={pointLightProps.decay}
-                                    shadow-mapSize-height={pointLightProps.shadowMapSize}
-                                    shadow-mapSize-width={pointLightProps.shadowMapSize}
-                                />
-                                <Suspense fallback={<Loader />}>
-                                    <Dome />
-                                    <group>
-                                        { nodes[name].isSkinnedMesh ? (
-                                        <skinnedMesh
-                                            geometry={nodes[name].geometry}
-                                            material={new THREE.MeshStandardMaterial(nodes[name].material)}
-                                            skeleton={nodes[name].skeleton}
-                                            material-color={colors[name] ? colors[name] : '#ffffff'}
-                                            onClick={(e) => { setCurName(name); e.stopPropagation() }}
-                                        /> ) : (
-                                        <mesh
-                                            key={nodes[name].uuid}
-                                            geometry={nodes[name].geometry}
-                                            material={new THREE.MeshStandardMaterial(nodes[name].material)} 
-                                            material-color={colors[name] ? colors[name] : '#ffffff'}
-                                            onClick={(e) => { setCurName(name); e.stopPropagation() }}
-                                            />
-                                        )}
-                                    </group>
-                                </Suspense>
-                            </Canvas>
+                        <StyledElement 
+                            onClick={() => {setCurName(name)}}
+                            key={nodes[name].uuid}
+                            style={{ backgroundImage: imageURL(name), borderWidth: name === curName ? 5 : 0 }}>
+                            {/* 123 */}
                         </StyledElement>
                     ) : null;
-                    })
-                }
+                })
+            }
             </StyledElementWrapper>
         </StyledViewer>
     )

@@ -24,10 +24,10 @@ export const models = [
     },
     {
         modelPath: "./model/clown_fish/scene.gltf",
-        elementPath: [
-            "./model/clown_fish/elements/body.png",
-            "./model/clown_fish/elements/eye.png"
-        ]
+        elementPath: {
+            'Circle_0' : "./model/clown_fish/elements/body.png",
+            'Sphere_0' : "./model/clown_fish/elements/eye.png"
+        }
     },
     {
         modelPath: "./model/fish/scene.gltf",
