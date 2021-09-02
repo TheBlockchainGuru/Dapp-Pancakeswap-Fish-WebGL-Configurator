@@ -1,64 +1,99 @@
-import BigNumber from 'bignumber.js'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { Suspense } from 'react'
 import { Button, Modal } from '@pancakeswap/uikit'
-import { ModalActions, ModalInput } from 'components/Modal'
+import { ModalActions } from 'components/Modal'
 import { useTranslation } from 'contexts/Localization'
-import { getFullDisplayBalance } from 'utils/formatBalance'
-import useToast from 'hooks/useToast'
-import Viewer from 'views/Configurator/components/Viewer';
+import { Canvas, useLoader } from '@react-three/fiber'
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import styled from 'styled-components'
+import Controls from './THREE/Controls';
+import Model from './THREE/Model';
+import Loader from './UI/Loader';
+
+import {
+  ambientLightProps,
+  cameraProps,
+  controlsProps,
+  modelProps,
+  pointLightProps,
+  models,
+  BackPaths
+} from '../utils/constant';
 
 interface View3DNftModalProps {
   onDismiss?: () => void
 }
 
+const StyledCanvasWrapper = styled.div`
+    height: 600px;
+    background-color: #CECFCA;
+    margin-top: 10px;
+    width: 800px;
+`
+
 const View3DNftModal: React.FC<View3DNftModalProps> = ({ onDismiss}) => {
-  // const [val, setVal] = useState('')
-  // const { toastSuccess, toastError } = useToast()
   const { t } = useTranslation()
-  const [curColor, setCurColor] = useState(localStorage.getItem('con_curColor') ? localStorage.getItem('con_curColor') : '#ffffff');
-  const [curName, setCurName] = useState(localStorage.getItem('con_curName') ? localStorage.getItem('con_curName') : 'None selected.');
-  const [curSpeed, setCurSpeed] = useState(localStorage.getItem('con_curSpeed') ? localStorage.getItem('con_curSpeed') : 1);
-  const [curBack, setCurBack] = useState(localStorage.getItem('con_curBack') ? localStorage.getItem('con_curBack') : 0);
-  const [colors, setColors] = useState( JSON.parse( localStorage.getItem('con_colors') ) ? JSON.parse( localStorage.getItem('con_colors') ) : {});
 
-  const setCurrentColor = (col) => {
-    setCurColor(col);
-    localStorage.setItem('con_curColor', col);
-
-    const temp = {...colors};
-    temp[curName] = col;
-    setColors(temp);
-    localStorage.setItem('con_colors', JSON.stringify(colors));
+  const Dome = () => {
+    const texture = useLoader(THREE.TextureLoader, BackPaths[0])
+    return (
+        <mesh>
+        <sphereBufferGeometry attach="geometry" args={[50, 100, 100]} />
+        <meshBasicMaterial attach="material" map={texture} side={THREE.BackSide} />
+        </mesh>
+    )
   }
 
-  const setCurrentSpeed = (speed) => {
-    setCurSpeed(speed);
-    localStorage.setItem('con_curSpeed', speed);
-  }
+  const ShowModel = () => {
+    const model = useLoader(GLTFLoader, models[4].modelPath);
+    const { nodes, animations } = model;
 
-  const setCurrentName = (name) => {
-    setCurName(name);
-    setCurColor(colors[name]);
-
-    localStorage.setItem('con_curName', name);
-  }
-
-  const setCurrentBack = (back) => {
-    setCurBack(back);
-    localStorage.setItem('con_curBack', back);
+    return (
+      <Model
+          data={{ 
+              'setModel': (data) => true,
+              'setColor': (data) => true,
+              'setCurName': (data) => true,
+              'curSpeed': 1,
+              'animations': animations,
+              'nodes': nodes,
+              'colors': {}
+          }}
+          position={modelProps.position}
+          castShadow
+      />
+    );
   }
 
   return (
     <Modal title='Clown' onDismiss={onDismiss}>
-      <Viewer 
-        curColor={curColor}
-        setColor={(col) => setCurrentColor(col)}
-        curName={curName}
-        setCurName={(name) => setCurrentName(name)}
-        curSpeed={curSpeed}
-        curBack={curBack}
-        colors={colors}
-        />
+      <StyledCanvasWrapper>
+          <Canvas
+              camera={{ fov: cameraProps.fov, position: cameraProps.position }}
+          >
+              <ambientLight intensity={ambientLightProps.intensity} />
+              <pointLight
+                  position={pointLightProps.position}
+                  castShadow
+                  decay={pointLightProps.decay}
+                  shadow-mapSize-height={pointLightProps.shadowMapSize}
+                  shadow-mapSize-width={pointLightProps.shadowMapSize}
+              />
+              <Controls
+                  maxPolarAngle={controlsProps.maxPolarAngle}
+                  minPolarAngle={controlsProps.minPolarAngle}
+                  maxDistance={controlsProps.maxDistance}
+                  minDistance={controlsProps.minDistance}
+                  target={controlsProps.target}
+                  enableKeys
+              />
+              <Suspense fallback={<Loader />}>
+                  <Dome />
+                  <ShowModel />
+                  
+              </Suspense>
+          </Canvas>
+      </StyledCanvasWrapper>
 
       <ModalActions>
         <Button variant="secondary" onClick={onDismiss} width="100%" >
