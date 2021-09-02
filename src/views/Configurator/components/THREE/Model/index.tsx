@@ -56,21 +56,29 @@ const Model: (props: ModelProps) => JSX.Element | null = (props) => {
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group position={[4.08, 1.01, 5.9]} rotation={[-0.27, 0.6, 1.93]} />
         <group position={[0.01, 0.37, 0.02]}>
-          <primitive object={nodes.Armature_rootJoint} />
-            {
-              Object.keys(nodes).map((name) => {
-                return nodes[name].isSkinnedMesh ? (
-                  <skinnedMesh
-                    key={nodes[name].uuid}
-                    geometry={nodes[name].geometry}
-                    material={nodes[name].material}
-                    skeleton={nodes[name].skeleton}
-                    material-color={colors[name] ? colors[name] : '#ffffff'}
-                    onClick={(e) => { setCurName(name); e.stopPropagation() }}
-                  />
-                ) : null;
-              })
-            }
+          { nodes.Armature_rootJoint ? (<primitive object={nodes.Armature_rootJoint} />) : null }
+          {
+            Object.keys(nodes).map((name) => {
+              return nodes[name].isSkinnedMesh ? (
+                <skinnedMesh
+                  key={nodes[name].uuid}
+                  geometry={nodes[name].geometry}
+                  material={nodes[name].material}
+                  skeleton={nodes[name].skeleton}
+                  material-color={colors[name] ? colors[name] : '#ffffff'}
+                  onClick={(e) => { setCurName(name); e.stopPropagation() }}
+                />
+              ) : nodes[name].isMesh ? (
+                <mesh
+                  key={nodes[name].uuid}
+                  geometry={nodes[name].geometry}
+                  material={nodes[name].material}
+                  material-color={colors[name] ? colors[name] : '#ffffff'}
+                  onClick={(e) => { setCurName(name); e.stopPropagation() }}
+                />
+              ) : null;
+            })
+          }
          </group>
       </group>
     </group>

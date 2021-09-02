@@ -3,7 +3,7 @@ export const cameraProps = { fov: 20, position: [30, 0, 0] };
 export const pixelRatio = 1;
 export const pointLightProps = { decay: 2, position: [10, 20, 15], shadowMapSize: 4096 };
 
-export const controlsProps = { maxPolarAngle: 2 *Math.PI, minPolarAngle: 0, target: [0, 0, 0], maxDistance: 150, minDistance: 10 };
+export const controlsProps = { maxPolarAngle: 2 *Math.PI, minPolarAngle: 0, target: [0, 0, 0], maxDistance: 130, minDistance: 10 };
 
 export const modelProps = { position: [0, 1, 8] };
 

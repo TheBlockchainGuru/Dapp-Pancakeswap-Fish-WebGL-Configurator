@@ -35,8 +35,8 @@
     "max-classes-per-file": 0,
     "@typescript-eslint/no-namespace": "off",
 
-    "camelcase": "off",
-    "@typescript-eslint/camelcase": ["warn"]
+    // "camelcase": "off",
+    // "@typescript-eslint/camelcase": ["warn"]
     // End temporary rules
   }
 }

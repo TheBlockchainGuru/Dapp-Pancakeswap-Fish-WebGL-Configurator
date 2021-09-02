@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { Button, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
@@ -38,6 +38,7 @@ const StyledElementWrapper = styled.div`
     align-items: center;
     text-align: center;
     justify-content: center;
+    overflow: auto;
 `
 
 type ChildProps = {
@@ -50,39 +51,26 @@ type ChildProps = {
     colors: any,
 }
 
+const StyledElement = styled.div`
+    width: 150px;
+    background-size: cover;
+    height: 100px;
+    border: 0px solid #f1416c;
+    margin-top: 10px;
+    margin-left: 15px;
+
+    &:hover {
+        cursor: pointer;
+        border: 5px solid #b84969;
+    }
+`
+
 const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed, curBack, colors}) => {
-    const { t } = useTranslation()  
-
-    const StyledElement1 = styled.div`
-        width: 150px;
-        background-image: url(${models[4].elementPath[0]});
-        background-size: cover;
-        height: 100px;
-        border: ${curName === 'Circle_0' ? 5 : 0}px solid #f1416c;
-        margin-top: 10px;
-
-        &:hover {
-            cursor: pointer;
-            border: 5px solid #b84969;
-        }
-    `
-    const StyledElement2 = styled.div`
-        width: 150px;
-        background-image: url(${models[4].elementPath[1]});
-        background-size: cover;
-        height: 100px;
-        border: ${curName === 'Sphere_0' ? 5 : 0}px solid #f1416c;
-        margin-top: 10px;
-        margin-left: 20px;
-
-        &:hover {
-            cursor: pointer;
-            border: 5px solid #b84969;
-        }
-    `
+    const { t } = useTranslation()
 
     const [ sceneData, setSceneData ] = useState(localStorage.getItem('con_sceneData') ? localStorage.getItem('con_sceneData') : {});
     const [ animationData, setAnimationData ] = useState(localStorage.getItem('con_animationData') ? localStorage.getItem('con_animationData') : {});
+    const [nodeMaterials, setNodematerials] = useState({});
 
     const exporter = new GLTFExporter();
 
@@ -177,12 +165,47 @@ const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed,
             </StyledCanvasWrapper>
 
             <StyledElementWrapper>
-                <StyledElement1 onClick={() => {setCurName('Circle_0')}}>
-                    {/* first */}
-                </StyledElement1>
-                <StyledElement2 onClick={() => {setCurName('Sphere_0')}}>
-                    {/* second */}
-                </StyledElement2>
+                {
+                    Object.keys(nodes).map((name) => {
+                    return nodes[name].isSkinnedMesh || nodes[name].isMesh ? (
+                        <StyledElement onClick={() => {setCurName(name)}} key={nodes[name].uuid}>
+                            <Canvas
+                                camera={{ fov: 20, position: [30, 0, 0] }}
+                            >
+                                <ambientLight intensity={ambientLightProps.intensity} />
+                                <pointLight
+                                    position={pointLightProps.position}
+                                    castShadow
+                                    decay={pointLightProps.decay}
+                                    shadow-mapSize-height={pointLightProps.shadowMapSize}
+                                    shadow-mapSize-width={pointLightProps.shadowMapSize}
+                                />
+                                <Suspense fallback={<Loader />}>
+                                    <Dome />
+                                    <group>
+                                        { nodes[name].isSkinnedMesh ? (
+                                        <skinnedMesh
+                                            geometry={nodes[name].geometry}
+                                            material={new THREE.MeshStandardMaterial(nodes[name].material)}
+                                            skeleton={nodes[name].skeleton}
+                                            material-color={colors[name] ? colors[name] : '#ffffff'}
+                                            onClick={(e) => { setCurName(name); e.stopPropagation() }}
+                                        /> ) : (
+                                        <mesh
+                                            key={nodes[name].uuid}
+                                            geometry={nodes[name].geometry}
+                                            material={new THREE.MeshStandardMaterial(nodes[name].material)} 
+                                            material-color={colors[name] ? colors[name] : '#ffffff'}
+                                            onClick={(e) => { setCurName(name); e.stopPropagation() }}
+                                            />
+                                        )}
+                                    </group>
+                                </Suspense>
+                            </Canvas>
+                        </StyledElement>
+                    ) : null;
+                    })
+                }
             </StyledElementWrapper>
         </StyledViewer>
     )
