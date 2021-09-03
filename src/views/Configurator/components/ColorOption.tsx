@@ -9,6 +9,7 @@ type ChildProps = {
     curColor: string,
     setSpeed: (arg0: any) => void,
     curSpeed: any,
+    resetSetting: any
 }
 
 const StyledOption = styled.div`
@@ -23,7 +24,7 @@ const StyledTestArea = styled.div`
     margin-bottom: 20px;
 `
 
-const Option: React.FC<ChildProps> = ({setColor, curColor, setSpeed, curSpeed}) => {
+const Option: React.FC<ChildProps> = ({setColor, curColor, setSpeed, curSpeed, resetSetting}) => {
     const { t } = useTranslation();
 
     const handleChangeComplete = (color) => {
@@ -60,7 +61,7 @@ const Option: React.FC<ChildProps> = ({setColor, curColor, setSpeed, curSpeed}) 
                 step={0.1}
             />
 
-            <Button variant="primary" onClick={() => { console.log('1'); }} style={{ marginTop: 50, backgroundColor: '#b64e4e' }}>
+            <Button variant="primary" onClick={() => { resetSetting() }} style={{ marginTop: 50, backgroundColor: '#b64e4e' }}>
                   {t('Reset Setting')}
             </Button>
         </StyledOption>

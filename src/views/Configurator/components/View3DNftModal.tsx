@@ -51,9 +51,9 @@ const View3DNftModal: React.FC<View3DNftModalProps> = ({ onDismiss}) => {
     return (
       <Model
           data={{ 
-              'setModel': (data) => true,
-              'setColor': (data) => true,
-              'setCurName': (data) => true,
+              'setModel': () => true,
+              'setColor': () => true,
+              'setCurName': () => true,
               'curSpeed': 1,
               'animations': animations,
               'nodes': nodes,

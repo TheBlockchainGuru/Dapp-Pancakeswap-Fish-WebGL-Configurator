@@ -90,7 +90,7 @@ const starsImage: CompositeImageProps = {
   ],
 }
 const handleSuccess = () => {
-  console.log('')
+  // console.log('')
 }
 
 const Hero = () => {

@@ -46,7 +46,7 @@ const Configurator = () => {
 
   const setCurrentName = (name) => {
     setCurName(name);
-    setCurColor(colors[name]);
+    setCurColor(colors[name] ? colors[name] : '#ffffff');
 
     localStorage.setItem('con_curName', name);
   }
@@ -54,6 +54,20 @@ const Configurator = () => {
   const setCurrentBack = (back) => {
     setCurBack(back);
     localStorage.setItem('con_curBack', back);
+  }
+
+  const resetSetting = () => {
+    setCurColor('#ffffff');
+    setColors({});
+    setCurSpeed(1);
+    setCurName('None selected.');
+    setCurBack(0);
+
+    localStorage.setItem('con_curColor', '#ffffff');
+    localStorage.setItem('con_colors', JSON.stringify({}));
+    localStorage.setItem('con_curSpeed', '1');
+    localStorage.setItem('con_curName', 'None selected.');
+    localStorage.setItem('con_curBack', '0');
   }
 
   return (
@@ -83,6 +97,7 @@ const Configurator = () => {
             curColor={curColor}
             setSpeed={(speed) => setCurrentSpeed(speed)}
             curSpeed={curSpeed}
+            resetSetting={() => resetSetting()}
             />
         </StyledMain>
     </StyledPage>
