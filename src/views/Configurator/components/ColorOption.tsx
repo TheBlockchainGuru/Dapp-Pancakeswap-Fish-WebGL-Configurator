@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { HexColorPicker } from "react-colorful";
-import { Slider, Text } from '@pancakeswap/uikit'
+import { Slider, Text, Button } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 
 type ChildProps = {
@@ -41,7 +41,11 @@ const Option: React.FC<ChildProps> = ({setColor, curColor, setSpeed, curSpeed}) 
             <HexColorPicker 
                 color={ curColor }
                 onChange={ handleChangeComplete }
+                style={{ marginLeft: '50%', transform: 'translate3d(-50%, 0, 0)' }}
                 />
+            <Text mb="10px" fontSize="20px">
+                { t(curColor) }
+            </Text>
 
             <Text mt="50px" mb="10px" fontSize="20px">
                 { t('Animation Speed') }
@@ -55,6 +59,10 @@ const Option: React.FC<ChildProps> = ({setColor, curColor, setSpeed, curSpeed}) 
                 valueLabel={`${curSpeed}x`}
                 step={0.1}
             />
+
+            <Button variant="primary" onClick={() => { console.log('1'); }} style={{ marginTop: 50, backgroundColor: '#b64e4e' }}>
+                  {t('Reset Setting')}
+            </Button>
         </StyledOption>
     )
 }
