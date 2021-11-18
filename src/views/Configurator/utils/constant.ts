@@ -47,6 +47,12 @@ export const models = [
     {
         modelPath: "./model/shiny_fish/scene.gltf",
     },
+    {
+        modelPath: "./model/killer_whale/scene.gltf",
+    },
+    {
+        modelPath: "./model/sailfish/scene.gltf",
+    },
 ];
 
 export const BackPaths = [

@@ -73,7 +73,8 @@ const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed,
 
     const exporter = new GLTFExporter();
 
-    const model = useLoader(GLTFLoader, models[4].modelPath);
+    const model = useLoader(GLTFLoader, models[11].modelPath);
+    console.log(model);
     const { nodes, animations } = model;
 
     const exportModel = () => {
@@ -161,6 +162,7 @@ const Viewer : React.FC<ChildProps> = ({setColor, curName, setCurName, curSpeed,
                             position={modelProps.position}
                             castShadow
                         />
+                        {/* <primitive object={model.scene} /> */}
                     </Suspense>
                 </Canvas>
             </StyledCanvasWrapper>

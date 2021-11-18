@@ -55,7 +55,8 @@ const Model: (props: ModelProps) => JSX.Element | null = (props) => {
     <group ref={group} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group position={[4.08, 1.01, 5.9]} rotation={[-0.27, 0.6, 1.93]} />
-        <group position={[0.01, 0.37, 0.02]}>
+        <group position={[0.01, 0.37, 0.02]} rotation={[Math.PI / 2, 0, 0]} scale={[0.02, 0.02, 0.02]}>
+          <primitive object={nodes._rootJoint} />
           { nodes.Armature_rootJoint ? (<primitive object={nodes.Armature_rootJoint} />) : null }
           {
             Object.keys(nodes).map((name) => {
